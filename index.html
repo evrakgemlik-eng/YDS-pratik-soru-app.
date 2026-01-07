@@ -3,27 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YDS Kelime Çalışması</title>
+    <title>YDS Deneme Sınavları</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Temel Ayarlar --- */
         :root {
-            --bg-color: #37474F;       /* Ana Arka Plan */
-            --header-bg: #37474F;      /* Üst Kısım Arka Planı */
-            --card-bg: #455A64;        /* Kart Arka Planı */
-            --accent-color: #FBC02D;   /* Sarı Çizgiler/Yazılar */
-            --text-color: #ffffff;     /* Beyaz Yazı */
-            --subtext-color: #B0BEC5;  /* Gri Alt Yazı */
-            --pill-bg: #263238;        /* İlerleme Çubuğu Arka Planı */
+            --bg-color: #37474F;
+            --header-bg: #37474F;
+            --card-bg: #455A64;
+            --accent-color: #FBC02D;
+            --text-color: #ffffff;
+            --subtext-color: #B0BEC5;
+            --pill-bg: #263238;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -34,17 +29,14 @@
             min-height: 100vh;
         }
 
-        /* Mobil Görünüm Konteynırı */
         .app-container {
             width: 100%;
-            max-width: 480px; /* Telefon genişliği sınırı */
+            max-width: 480px;
             background-color: var(--bg-color);
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
-        /* --- Header (Üst Kısım) --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -53,79 +45,42 @@
             background-color: var(--header-bg);
         }
 
-        .header-title {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .icon-btn {
-            font-size: 20px;
-            color: #90a4ae;
-            cursor: pointer;
-        }
-
+        .header-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+        .icon-btn { font-size: 20px; color: #90a4ae; cursor: pointer; }
         .user-avatar {
-            width: 35px;
-            height: 35px;
-            background-color: #FFCC80; /* Avatar arka planı */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .user-avatar img {
-            width: 80%; /* Basit avatar emojisi veya resmi için */
+            width: 35px; height: 35px; background-color: #FFCC80;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
         }
 
-        /* --- Navigasyon Menüsü (YDS, HABER vs.) --- */
+        /* Navigasyon - Sadece YDS kaldığı için ortaladım */
         .nav-scroller {
             display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
+            justify-content: center; /* Ortaya hizala */
             background-color: #455A64;
             padding: 0 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        /* Scrollbar'ı gizle */
-        .nav-scroller::-webkit-scrollbar {
-            display: none;
-        }
-
         .nav-item {
-            padding: 15px 20px;
-            color: #90a4ae;
+            padding: 15px 40px;
+            color: var(--accent-color); /* Aktif renk */
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             text-decoration: none;
             position: relative;
             cursor: pointer;
         }
 
-        .nav-item.active {
-            color: var(--accent-color);
+        .nav-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 3px; background-color: var(--accent-color);
         }
 
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--accent-color);
-        }
-
-        /* --- Liste Alanı --- */
         .content-list {
             padding: 20px;
-            padding-bottom: 80px; /* Alt kısım için boşluk */
+            padding-bottom: 80px;
         }
 
-        /* --- Kart Tasarımı --- */
         .level-card {
             background-color: var(--card-bg);
             border: 1px solid var(--accent-color);
@@ -140,24 +95,11 @@
             cursor: pointer;
         }
 
-        .level-card:active {
-            transform: scale(0.98);
-        }
+        .level-card:active { transform: scale(0.98); }
 
-        .card-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .card-icon {
-            font-size: 24px;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 18px;
-        }
+        .card-left { display: flex; align-items: center; gap: 15px; }
+        .card-icon { font-size: 24px; }
+        .card-title { font-weight: 700; font-size: 18px; }
 
         .card-right {
             text-align: right;
@@ -167,11 +109,7 @@
             gap: 5px;
         }
 
-        .word-count {
-            font-size: 12px;
-            color: var(--subtext-color);
-        }
-
+        .word-count { font-size: 12px; color: var(--subtext-color); }
         .progress-pill {
             background-color: var(--pill-bg);
             color: #cfd8dc;
@@ -180,89 +118,49 @@
             border-radius: 20px;
             font-weight: 500;
         }
-
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
         <header>
             <div class="icon-btn"><i class="fa-solid fa-gear"></i></div>
             <div class="header-title">YDS</div>
-            <div class="user-avatar">
-                <i class="fa-solid fa-user-tie" style="color: #37474F;"></i>
-            </div>
+            <div class="user-avatar"><i class="fa-solid fa-user-tie" style="color: #37474F;"></i></div>
         </header>
 
         <nav class="nav-scroller">
-            <a href="#" class="nav-item active">YDS</a>
-            <a href="#" class="nav-item">HABER</a>
-            <a href="#" class="nav-item">B2</a>
-            <a href="#" class="nav-item">B1</a>
-            <a href="#" class="nav-item">C</a>
-            <a href="#" class="nav-item">SÖZLÜK</a>
+            <a href="#" class="nav-item">YDS</a>
         </nav>
 
-        <main class="content-list">
-
-            <div class="level-card">
-                <div class="card-left">
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-title">1. Seviye</div>
-                </div>
-                <div class="card-right">
-                    <span class="word-count">20 Kelime</span>
-                    <span class="progress-pill">0/2 Tamamlandı</span>
-                </div>
-            </div>
-
-            <div class="level-card">
-                <div class="card-left">
-                    <div class="card-icon">✍️</div>
-                    <div class="card-title">2. Seviye</div>
-                </div>
-                <div class="card-right">
-                    <span class="word-count">20 Kelime</span>
-                    <span class="progress-pill">0/2 Tamamlandı</span>
-                </div>
-            </div>
-
-            <div class="level-card">
-                <div class="card-left">
-                    <div class="card-icon">🔍</div>
-                    <div class="card-title">3. Seviye</div>
-                </div>
-                <div class="card-right">
-                    <span class="word-count">20 Kelime</span>
-                    <span class="progress-pill">0/2 Tamamlandı</span>
-                </div>
-            </div>
-
-            <div class="level-card">
-                <div class="card-left">
-                    <div class="card-icon">🧠</div>
-                    <div class="card-title">4. Seviye</div>
-                </div>
-                <div class="card-right">
-                    <span class="word-count">20 Kelime</span>
-                    <span class="progress-pill">0/2 Tamamlandı</span>
-                </div>
-            </div>
-
-            <div class="level-card">
-                <div class="card-left">
-                    <div class="card-icon">📚</div>
-                    <div class="card-title">5. Seviye</div>
-                </div>
-                <div class="card-right">
-                    <span class="word-count">20 Kelime</span>
-                    <span class="progress-pill">0/2 Tamamlandı</span>
-                </div>
-            </div>
-
-        </main>
+        <main class="content-list" id="cardContainer">
+            </main>
     </div>
+
+    <script>
+        const container = document.getElementById('cardContainer');
+        const icons = ['📝', '✍️', '🧠', '📚', '🎯']; // Döngüsel kullanılacak ikonlar
+
+        // 50 Adet Deneme Oluşturma Döngüsü
+        for (let i = 1; i <= 50; i++) {
+            // İkonu sırayla seç
+            const icon = icons[(i - 1) % icons.length];
+            
+            const html = `
+                <div class="level-card">
+                    <div class="card-left">
+                        <div class="card-icon">${icon}</div>
+                        <div class="card-title">${i}. Deneme</div>
+                    </div>
+                    <div class="card-right">
+                        <span class="word-count">80 Soru</span>
+                        <span class="progress-pill">Başlamadın</span>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += html;
+        }
+    </script>
 
 </body>
 </html>
