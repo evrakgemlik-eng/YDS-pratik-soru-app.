@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YDS Soru Bankası Pro</title>
+    <title>YDS Sınav Merkezi - Gerçek Kelimeler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -30,12 +30,12 @@
         .quiz-header { background-color: var(--header-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .timer-box { background: #37474F; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 5px 12px; border-radius: 20px; font-weight: bold; }
         .quiz-content { flex: 1; padding: 20px; overflow-y: auto; }
-        .question-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .question-card { background-color: var(--card-bg); padding: 20px; border-radius: 15px; }
         .option-btn { background: transparent; border: 1px solid #78909C; color: #eceff1; padding: 12px 15px; border-radius: 8px; margin-top: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; transition: 0.2s; }
-        .option-btn.selected { background-color: rgba(251, 192, 45, 0.3); border-color: var(--accent-color); }
-        .quiz-footer { padding: 15px 20px; background-color: var(--header-bg); display: flex; justify-content: space-between; gap: 10px; }
-        .nav-btn { background-color: var(--accent-color); border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1; }
-        .nav-btn:disabled { background-color: #546E7A; cursor: not-allowed; }
+        .option-btn.selected { background-color: rgba(251, 192, 45, 0.4); border-color: var(--accent-color); }
+        .quiz-footer { padding: 15px 20px; background-color: var(--header-bg); display: flex; justify-content: space-between; }
+        .nav-btn { background-color: var(--accent-color); border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .nav-btn:disabled { background-color: #78909C; cursor: not-allowed; opacity: 0.5; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 50; }
         .result-card { background: var(--card-bg); width: 85%; padding: 25px; border-radius: 20px; text-align: center; border: 2px solid var(--accent-color); }
@@ -47,22 +47,22 @@
         <div id="menu-view">
             <header>
                 <div class="icon-btn"><i class="fa-solid fa-gear"></i></div>
-                <div class="header-title" style="font-weight: 700;">YDS SINAV MERKEZİ</div>
+                <div class="header-title">YDS KELİME PRATİK</div>
                 <div class="icon-btn"><i class="fa-solid fa-user-tie"></i></div>
             </header>
-            <nav class="nav-scroller"><a href="#" class="nav-item">DENEMELER</a></nav>
+            <nav class="nav-scroller"><a href="#" class="nav-item">YDS KELİMELERİ</a></nav>
             <main class="content-list" id="cardContainer"></main>
         </div>
 
         <div id="quiz-view">
             <div class="quiz-header">
-                <div onclick="exitExam()" style="cursor:pointer"><i class="fa-solid fa-xmark fa-xl"></i></div>
+                <div onclick="exitExam()" style="cursor:pointer; font-size: 20px;"><i class="fa-solid fa-xmark"></i></div>
                 <div class="timer-box" id="timer">180:00</div>
-                <div><span id="current-q-num">1</span>/<span id="total-q-num">80</span></div>
+                <div><span id="current-q-num">1</span>/<span id="total-q-num">10</span></div>
             </div>
             <div class="quiz-content">
                 <div class="question-card">
-                    <p id="question-text" style="margin-bottom:20px; font-weight:500; line-height: 1.5;"></p>
+                    <p id="question-text" style="margin-bottom:20px; font-weight:500; font-size:18px; line-height:1.5;"></p>
                     <div id="options-container"></div>
                 </div>
             </div>
@@ -83,29 +83,26 @@
     </div>
 
     <script>
-        // --- GERÇEK YDS KELİME SORULARI ---
+        // --- GERÇEK YDS SORU BANKASI ---
         const soruBankasi = {
             1: [
-                { text: "The government has introduced new ______ to curb the rising inflation rate in the country.", options: ["legislation", "negotiation", "violation", "resignation", "allegation"], correct: 0 },
-                { text: "Despite many years of research, the origin of the universe remains a/an ______ to most scientists.", options: ["evidence", "enigma", "consensus", "insight", "climax"], correct: 1 },
-                { text: "She was so ______ in her work that she didn't even notice the fire alarm going off.", options: ["vulnerable", "fastidious", "engrossed", "negligible", "notorious"], correct: 2 },
-                { text: "The new manager's ______ approach helped to solve the long-standing disputes between the departments.", options: ["vague", "pragmatic", "capricious", "redundant", "hostile"], correct: 1 },
-                { text: "The company's profits have ______ significantly since they launched the new advertising campaign.", options: ["plummeted", "stabilized", "burgeoned", "deteriorated", "abated"], correct: 2 }
-            ],
-            2: [
-                { text: "The judge's decision was based on ______ evidence that could not be disputed by the defense.", options: ["tenuous", "tangible", "obscure", "frivolous", "arbitrary"], correct: 1 },
-                { text: "In some cultures, it is considered ______ to ask someone about their salary.", options: ["impeccable", "judicious", "indecorous", "benevolent", "eloquent"], correct: 2 },
-                { text: "The archeological findings provide ______ evidence of a civilization that existed 5,000 years ago.", options: ["substantial", "meager", "redundant", "vague", "ephemeral"], correct: 0 },
-                { text: "The epidemic ______ after the introduction of the new vaccine program.", options: ["exacerbated", "receded", "kindled", "thrived", "erupted"], correct: 1 },
-                { text: "His ______ remarks during the meeting caused a lot of tension among his colleagues.", options: ["genial", "disparaging", "meticulous", "plausible", "unanimous"], correct: 1 }
+                { text: "The government has decided to ______ the new tax law due to public pressure.", options: ["abolish", "confirm", "maintain", "expand", "justify"], correct: 0 },
+                { text: "Scientific research suggests that regular exercise can ______ the risk of heart disease.", options: ["increase", "diminish", "ignore", "suffer", "release"], correct: 1 },
+                { text: "Environmentalists are concerned about the ______ of natural resources for future generations.", options: ["preservation", "depletion", "abundance", "supply", "discovery"], correct: 1 },
+                { text: "Despite the ______ evidence against him, the suspect denied all charges.", options: ["vague", "insignificant", "overwhelming", "doubtful", "minor"], correct: 2 },
+                { text: "The CEO was forced to ______ his position following the financial scandal.", options: ["accept", "resign", "promote", "achieve", "defend"], correct: 1 }
             ]
         };
 
         const genelHavuz = [
-            { text: "The economic crisis has ______ many families of their basic needs.", options: ["deprived", "allocated", "bestowed", "endowed", "exempted"], correct: 0 },
-            { text: "Due to ______ weather conditions, all flights have been cancelled until further notice.", options: ["genial", "adverse", "temperate", "serene", "placid"], correct: 1 },
-            { text: "The suspect's testimony was ______ with the evidence found at the crime scene.", options: ["inconsistent", "coherent", "impartial", "fastidious", "precise"], correct: 0 },
-            { text: "It is ______ that we act immediately to prevent further damage to the environment.", options: ["trivial", "imperative", "negligible", "frivolous", "optional"], correct: 1 }
+            { text: "Her performance was so ______ that the audience gave her a standing ovation.", options: ["ordinary", "mediocre", "exceptional", "dull", "predictable"], correct: 2 },
+            { text: "The new bridge will ______ the two sides of the river, reducing travel time significantly.", options: ["divide", "separate", "connect", "block", "isolate"], correct: 2 },
+            { text: "The manager had to ______ the meeting until next week because of an emergency.", options: ["postpone", "cancel", "hold", "advance", "organize"], correct: 0 },
+            { text: "She managed to ______ her goals despite facing numerous obstacles.", options: ["fail", "accomplish", "abandon", "avoid", "hesitate"], correct: 1 },
+            { text: "Scientists are trying to ______ a cure for the virus that has affected millions.", options: ["invent", "destroy", "discover", "neglect", "hide"], correct: 2 },
+            { text: "The company's profits have ______ significantly over the last quarter.", options: ["shrunk", "increased", "stagnated", "vanished", "failed"], correct: 1 },
+            { text: "It is ______ to wear a seatbelt at all times while driving.", options: ["optional", "compulsory", "prohibited", "unnecessary", "recommended"], correct: 1 },
+            { text: "The ______ of the ancient city was a major breakthrough for history.", options: ["destruction", "reconstruction", "excavation", "neglect", "sale"], correct: 2 }
         ];
 
         let currentQuestions = [];
@@ -113,7 +110,7 @@
         let userAnswers = [];
         let activeExamId = 0;
         let timer;
-        let timeLeft;
+        let timeLeft = 180 * 60;
 
         function renderMenu() {
             const container = document.getElementById('cardContainer');
@@ -122,7 +119,7 @@
                 const score = localStorage.getItem(`score_${i}`) || "Başlamadın";
                 container.innerHTML += `
                     <div class="level-card" onclick="startExam(${i})">
-                        <div><b>${i}. Deneme</b><br><small>YDS Kelime & Gramer</small></div>
+                        <div><b>${i}. Deneme (Kelime Odaklı)</b><br><small>YDS Seviye</small></div>
                         <div class="score-badge">${score === "Başlamadın" ? score : score + " Puan"}</div>
                     </div>`;
             }
@@ -130,53 +127,54 @@
 
         function startExam(id) {
             activeExamId = id;
-            currentQuestions = soruBankasi[id] || [...genelHavuz].sort(() => 0.5 - Math.random());
+            // Eğer deneme numarasına özel soru yoksa havuzdan 10 soru seç
+            let baseQuestions = soruBankasi[id] || [...genelHavuz].sort(() => 0.5 - Math.random()).slice(0, 10);
+            currentQuestions = baseQuestions;
+            
             currentIdx = 0;
             userAnswers = new Array(currentQuestions.length).fill(null);
-            
             document.getElementById('total-q-num').innerText = currentQuestions.length;
             document.getElementById('menu-view').style.display = 'none';
             document.getElementById('quiz-view').style.display = 'flex';
-            
             loadQuestion();
             startTimer();
         }
 
         function loadQuestion() {
             const q = currentQuestions[currentIdx];
-            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('question-text').innerText = `${currentIdx + 1}. ${q.text}`;
             document.getElementById('current-q-num').innerText = currentIdx + 1;
             
+            // Geri butonu kontrolü (Hata düzeltmesi)
+            document.getElementById('prev-btn').disabled = (currentIdx === 0);
+
             const optCont = document.getElementById('options-container');
             optCont.innerHTML = "";
             q.options.forEach((opt, i) => {
-                const sel = userAnswers[currentIdx] === i ? 'selected' : '';
-                optCont.innerHTML += `<button class="option-btn ${sel}" onclick="setAns(${i})">
-                    <b style="color:var(--accent-color)">${String.fromCharCode(65+i)}</b> ${opt}
-                </button>`;
+                const isSelected = userAnswers[currentIdx] === i ? 'selected' : '';
+                optCont.innerHTML += `
+                    <button class="option-btn ${isSelected}" onclick="setAns(${i})">
+                        <b style="color:var(--accent-color)">${String.fromCharCode(65+i)}</b> ${opt}
+                    </button>`;
             });
 
-            // Geri butonu kontrolü
-            document.getElementById('prev-btn').disabled = (currentIdx === 0);
-
-            // İleri / Bitir butonu kontrolü
             const btn = document.getElementById('next-action-btn');
             if(currentIdx === currentQuestions.length - 1) {
                 btn.innerText = "Sınavı Bitir";
-                btn.style.backgroundColor = "var(--success-color)";
                 btn.onclick = finishExam;
             } else {
                 btn.innerText = "İleri";
-                btn.style.backgroundColor = "var(--accent-color)";
                 btn.onclick = nextQuestion;
             }
         }
 
+        // Seçim yapınca otomatik hafızaya alır ve ekranı günceller
         function setAns(i) { 
             userAnswers[currentIdx] = i; 
             loadQuestion(); 
         }
 
+        // İleri butonu fonksiyonu
         function nextQuestion() { 
             if(currentIdx < currentQuestions.length - 1) { 
                 currentIdx++; 
@@ -184,7 +182,7 @@
             } 
         }
 
-        // HATA DÜZELTİLDİ: prevQuestion fonksiyonu artık loadQuestion çağırarak ekranı güncelliyor.
+        // Geri butonu fonksiyonu (Hata burada düzeltildi)
         function prevQuestion() { 
             if(currentIdx > 0) { 
                 currentIdx--; 
@@ -207,17 +205,19 @@
         function finishExam() {
             clearInterval(timer);
             let correct = 0;
-            currentQuestions.forEach((q, i) => { if(userAnswers[i] === q.correct) correct++; });
+            currentQuestions.forEach((q, i) => { 
+                if(userAnswers[i] === q.correct) correct++; 
+            });
             const score = (correct * (100 / currentQuestions.length)).toFixed(1);
             
             localStorage.setItem(`score_${activeExamId}`, score);
             document.getElementById('final-score').innerText = score;
-            document.getElementById('stat-text').innerText = `${currentQuestions.length} soruda ${correct} doğru cevap verdiniz.`;
+            document.getElementById('stat-text').innerText = `${currentQuestions.length} soruda ${correct} doğru cevap.`;
             document.getElementById('resultModal').style.display = 'flex';
         }
 
         function exitExam() { 
-            if(confirm("Sınavdan çıkmak istediğine emin misin? Mevcut ilerlemen kaydedilmeyecektir.")) {
+            if(confirm("Sınavdan çıkmak istediğine emin misin? İlerlemen silinecektir.")) {
                 clearInterval(timer);
                 document.getElementById('quiz-view').style.display = 'none';
                 document.getElementById('menu-view').style.display = 'flex';
