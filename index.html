@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YDS Deneme Sınavları</title>
+    <title>YDS Deneme Sınavı Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg-color: #37474F;
-            --header-bg: #37474F;
+            --header-bg: #263238;
             --card-bg: #455A64;
             --accent-color: #FBC02D;
             --text-color: #ffffff;
             --subtext-color: #B0BEC5;
-            --pill-bg: #263238;
+            --success-color: #66BB6A;
+            --danger-color: #EF5350;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,132 +36,422 @@
             background-color: var(--bg-color);
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* --- GENEL HEADER --- */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
             background-color: var(--header-bg);
+            z-index: 10;
         }
-
-        .header-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+        .header-title { font-size: 18px; font-weight: 700; letter-spacing: 1px; }
         .icon-btn { font-size: 20px; color: #90a4ae; cursor: pointer; }
-        .user-avatar {
-            width: 35px; height: 35px; background-color: #FFCC80;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        }
 
-        /* Navigasyon - Sadece YDS kaldığı için ortaladım */
+        /* --- MENÜ EKRANI (Ana Sayfa) --- */
+        #menu-view { display: flex; flex-direction: column; height: 100%; }
+        
         .nav-scroller {
-            display: flex;
-            justify-content: center; /* Ortaya hizala */
-            background-color: #455A64;
-            padding: 0 10px;
+            display: flex; justify-content: center;
+            background-color: #455A64; padding: 0 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
         .nav-item {
-            padding: 15px 40px;
-            color: var(--accent-color); /* Aktif renk */
-            font-weight: 700;
-            font-size: 15px;
-            text-decoration: none;
+            padding: 15px 40px; color: var(--accent-color);
+            font-weight: 700; font-size: 15px; text-decoration: none;
             position: relative;
-            cursor: pointer;
         }
-
         .nav-item::after {
             content: ''; position: absolute; bottom: 0; left: 0;
             width: 100%; height: 3px; background-color: var(--accent-color);
         }
 
-        .content-list {
-            padding: 20px;
-            padding-bottom: 80px;
-        }
+        .content-list { padding: 20px; overflow-y: auto; flex: 1; }
 
         .level-card {
             background-color: var(--card-bg);
             border: 1px solid var(--accent-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-            cursor: pointer;
+            border-radius: 12px; padding: 15px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s;
         }
-
         .level-card:active { transform: scale(0.98); }
-
         .card-left { display: flex; align-items: center; gap: 15px; }
         .card-icon { font-size: 24px; }
-        .card-title { font-weight: 700; font-size: 18px; }
-
-        .card-right {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-
-        .word-count { font-size: 12px; color: var(--subtext-color); }
+        .card-title { font-weight: 700; font-size: 16px; }
+        .card-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
         .progress-pill {
-            background-color: var(--pill-bg);
-            color: #cfd8dc;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 500;
+            background-color: #263238; color: #cfd8dc; font-size: 11px;
+            padding: 4px 10px; border-radius: 20px; font-weight: 500;
         }
+        .score-badge { color: var(--accent-color); font-weight: bold; font-size: 13px; }
+
+        /* --- SINAV EKRANI (Quiz View) --- */
+        #quiz-view {
+            display: none; /* Başlangıçta gizli */
+            flex-direction: column; height: 100vh;
+            background-color: var(--bg-color);
+            position: absolute; top: 0; left: 0; width: 100%; z-index: 20;
+        }
+
+        .quiz-header {
+            background-color: var(--header-bg); padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .timer-box {
+            background: #37474F; border: 1px solid var(--accent-color);
+            color: var(--accent-color); padding: 5px 12px; border-radius: 20px;
+            font-weight: bold; font-size: 14px; display: flex; gap: 5px; align-items: center;
+        }
+
+        .quiz-content { flex: 1; padding: 20px; overflow-y: auto; }
+        
+        .question-card {
+            background-color: var(--card-bg); padding: 20px;
+            border-radius: 15px; margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .question-text { font-size: 16px; line-height: 1.5; margin-bottom: 20px; font-weight: 500; }
+        
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        .option-btn {
+            background: transparent; border: 1px solid #78909C;
+            color: #eceff1; padding: 12px 15px; border-radius: 8px;
+            text-align: left; font-size: 14px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .option-letter {
+            width: 25px; height: 25px; background: #546E7A; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;
+        }
+        
+        /* Seçili Şık Tasarımı */
+        .option-btn.selected {
+            background-color: rgba(251, 192, 45, 0.15);
+            border-color: var(--accent-color); color: var(--accent-color);
+        }
+        .option-btn.selected .option-letter {
+            background-color: var(--accent-color); color: #37474F;
+        }
+
+        .quiz-footer {
+            padding: 15px 20px; background-color: var(--header-bg);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-btn {
+            background-color: var(--accent-color); color: #37474F; border: none;
+            padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
+        .nav-btn:disabled { background-color: #546E7A; opacity: 0.5; cursor: not-allowed; }
+
+        /* --- SONUÇ MODALI --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: none;
+            align-items: center; justify-content: center; z-index: 50;
+        }
+        .result-card {
+            background: var(--card-bg); width: 85%; max-width: 350px;
+            padding: 25px; border-radius: 20px; text-align: center;
+            border: 2px solid var(--accent-color);
+        }
+        .result-title { font-size: 22px; margin-bottom: 15px; color: var(--accent-color); }
+        .score-circle {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 5px solid var(--accent-color); margin: 0 auto 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .score-val { font-size: 28px; font-weight: bold; }
+        .score-label { font-size: 12px; color: #B0BEC5; }
+        .stat-row { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .stat-item { font-size: 14px; }
+        .stat-item span { display: block; font-weight: bold; font-size: 18px; margin-top: 5px; }
+        .btn-finish {
+            width: 100%; padding: 12px; background: var(--accent-color); border: none;
+            border-radius: 8px; color: #37474F; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <header>
-            <div class="icon-btn"><i class="fa-solid fa-gear"></i></div>
-            <div class="header-title">YDS</div>
-            <div class="user-avatar"><i class="fa-solid fa-user-tie" style="color: #37474F;"></i></div>
-        </header>
+        
+        <div id="menu-view">
+            <header>
+                <div class="icon-btn"><i class="fa-solid fa-gear"></i></div>
+                <div class="header-title">YDS Hazırlık</div>
+                <div class="icon-btn"><i class="fa-solid fa-user-tie"></i></div>
+            </header>
+            <nav class="nav-scroller">
+                <a href="#" class="nav-item">YDS</a>
+            </nav>
+            <main class="content-list" id="cardContainer">
+                </main>
+        </div>
 
-        <nav class="nav-scroller">
-            <a href="#" class="nav-item">YDS</a>
-        </nav>
+        <div id="quiz-view">
+            <div class="quiz-header">
+                <div class="icon-btn" onclick="exitExam()"><i class="fa-solid fa-arrow-left"></i></div>
+                <div class="timer-box">
+                    <i class="fa-regular fa-clock"></i> <span id="timer">180:00</span>
+                </div>
+                <div style="font-size: 14px; color: #B0BEC5;">
+                    <span id="current-q-num">1</span>/80
+                </div>
+            </div>
 
-        <main class="content-list" id="cardContainer">
-            </main>
+            <div class="quiz-content">
+                <div class="question-card">
+                    <div class="question-text" id="question-text">
+                        Soru yükleniyor...
+                    </div>
+                    <div class="options-list" id="options-container">
+                        </div>
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="nav-btn" id="prev-btn" onclick="prevQuestion()" disabled>Önceki</button>
+                <button class="nav-btn" id="next-btn" onclick="nextQuestion()">Sonraki</button>
+                <button class="nav-btn" id="finish-btn" onclick="finishExam()" style="display:none; background-color:#EF5350; color:white;">Bitir</button>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="resultModal">
+            <div class="result-card">
+                <h2 class="result-title">Sınav Tamamlandı!</h2>
+                <div class="score-circle">
+                    <span class="score-val" id="final-score">0</span>
+                    <span class="score-label">PUAN</span>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-item" style="color:var(--success-color)">Doğru<span id="correct-count">0</span></div>
+                    <div class="stat-item" style="color:var(--danger-color)">Yanlış<span id="wrong-count">0</span></div>
+                    <div class="stat-item" style="color:#B0BEC5">Boş<span id="empty-count">0</span></div>
+                </div>
+                <button class="btn-finish" onclick="closeResultModal()">Ana Menüye Dön</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        /* --- 1. VERİ YAPISI (Buraya 80 Soru Eklenebilir) --- */
+        // Örnek olarak 5 soru ekledim. Sen bu listeyi kopyalayarak 80'e tamamlayabilirsin.
+        const ydsQuestions = [
+            {
+                id: 1,
+                text: "Much of the immune system’s machinery is geared towards killing cells ______ with a virus.",
+                options: ["infected", "removed", "combined", "replaced", "duplicated"],
+                correct: 0 // 0 = A, 1 = B, 2 = C, 3 = D, 4 = E
+            },
+            {
+                id: 2,
+                text: "The government has ______ a new policy to combat inflation effectively.",
+                options: ["denied", "implemented", "regretted", "prevented", "collapsed"],
+                correct: 1
+            },
+            {
+                id: 3,
+                text: "Unless strict measures are taken, the problem of unemployment will ______ worsen.",
+                options: ["accidentally", "mutually", "inevitably", "scarcely", "negligibly"],
+                correct: 2
+            },
+            {
+                id: 4,
+                text: "Scientists have discovered that some species can ______ to extreme weather conditions surprisingly well.",
+                options: ["adopt", "adapt", "adept", "abrupt", "accept"],
+                correct: 1
+            },
+            {
+                id: 5,
+                text: "He was ______ of the theft because he had a solid alibi for the time of the crime.",
+                options: ["accused", "convicted", "suspected", "acquitted", "sentenced"],
+                correct: 3
+            }
+            // ... Buraya diğer soruları ekleyebilirsin ...
+        ];
+
+        /* --- 2. DEĞİŞKENLER --- */
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(ydsQuestions.length).fill(null); // Cevapları tutar
+        let timerInterval;
+        let timeRemaining = 180 * 60; // 180 dakika (saniye cinsinden)
+        let activeExamId = null;
+
+        /* --- 3. BAŞLANGIÇ: MENÜYÜ OLUŞTUR --- */
         const container = document.getElementById('cardContainer');
-        const icons = ['📝', '✍️', '🧠', '📚', '🎯']; // Döngüsel kullanılacak ikonlar
+        const icons = ['📝', '✍️', '🧠', '📚', '🎯'];
 
-        // 50 Adet Deneme Oluşturma Döngüsü
-        for (let i = 1; i <= 50; i++) {
-            // İkonu sırayla seç
-            const icon = icons[(i - 1) % icons.length];
-            
-            const html = `
-                <div class="level-card">
-                    <div class="card-left">
-                        <div class="card-icon">${icon}</div>
-                        <div class="card-title">${i}. Deneme</div>
+        function initMenu() {
+            container.innerHTML = "";
+            for (let i = 1; i <= 50; i++) {
+                const icon = icons[(i - 1) % icons.length];
+                // LocalStorage'dan önceki puanı çek (varsa)
+                const savedScore = localStorage.getItem(`exam_${i}_score`);
+                const scoreText = savedScore ? `<span class="score-badge">${savedScore} Puan</span>` : `<span class="progress-pill">Başlamadın</span>`;
+                
+                const html = `
+                    <div class="level-card" onclick="startExam(${i})">
+                        <div class="card-left">
+                            <div class="card-icon">${icon}</div>
+                            <div class="card-title">${i}. Deneme</div>
+                        </div>
+                        <div class="card-right">
+                            <span class="word-count">80 Soru</span>
+                            <div id="status-${i}">${scoreText}</div>
+                        </div>
                     </div>
-                    <div class="card-right">
-                        <span class="word-count">80 Soru</span>
-                        <span class="progress-pill">Başlamadın</span>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += html;
+                `;
+                container.innerHTML += html;
+            }
         }
-    </script>
+        initMenu();
 
+        /* --- 4. SINAV FONKSİYONLARI --- */
+        
+        function startExam(id) {
+            // Sadece 1. Deneme için sorularımız var, diğerlerinde uyarı verebiliriz veya aynı soruları açabiliriz.
+            // Bu örnekte 1. deneme aktif, diğerleri demo.
+            activeExamId = id;
+            
+            // Ekran değiştir
+            document.getElementById('menu-view').style.display = 'none';
+            document.getElementById('quiz-view').style.display = 'flex';
+
+            // Reset
+            currentQuestionIndex = 0;
+            userAnswers = new Array(ydsQuestions.length).fill(null);
+            timeRemaining = 180 * 60; 
+            
+            // Soruyu Yükle
+            loadQuestion();
+            
+            // Sayacı Başlat
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const q = ydsQuestions[currentQuestionIndex];
+            const letters = ["A", "B", "C", "D", "E"];
+            
+            // Başlık ve Sayaç Güncelle
+            document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}) ${q.text}`;
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+
+            // Şıkları Oluştur
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === idx ? "selected" : "";
+                const btn = document.createElement('div');
+                btn.className = `option-btn ${isSelected}`;
+                btn.onclick = () => selectOption(idx);
+                btn.innerHTML = `
+                    <div class="option-letter">${letters[idx]}</div>
+                    <div>${opt}</div>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Buton Kontrolü
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === ydsQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'none';
+                document.getElementById('finish-btn').style.display = 'block';
+            } else {
+                document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('finish-btn').style.display = 'none';
+            }
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            loadQuestion(); // UI'ı güncellemek için (seçili rengi için)
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < ydsQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        /* --- 5. SAYAÇ & BİTİRME --- */
+        function startTimer() {
+            clearInterval(timerInterval);
+            const timerEl = document.getElementById('timer');
+            
+            timerInterval = setInterval(() => {
+                if(timeRemaining <= 0) {
+                    finishExam();
+                    return;
+                }
+                timeRemaining--;
+                
+                const m = Math.floor(timeRemaining / 60);
+                const s = timeRemaining % 60;
+                timerEl.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            }, 1000);
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            
+            // Puan Hesapla (YDS: 80 soru, her biri 1.25 puan)
+            let correct = 0;
+            let empty = 0;
+            
+            ydsQuestions.forEach((q, i) => {
+                if (userAnswers[i] === null) empty++;
+                else if (userAnswers[i] === q.correct) correct++;
+            });
+
+            const wrong = ydsQuestions.length - (correct + empty);
+            // Soru sayımız 5 olduğu için puanı oranlıyoruz. Normalde (correct * 1.25)
+            // Simülasyon olduğu için: (Doğru / Toplam Soru) * 100
+            const score = ((correct / ydsQuestions.length) * 100).toFixed(1);
+
+            // Modalı Doldur
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('correct-count').innerText = correct;
+            document.getElementById('wrong-count').innerText = wrong;
+            document.getElementById('empty-count').innerText = empty;
+
+            // Puanı Kaydet (LocalStorage)
+            localStorage.setItem(`exam_${activeExamId}_score`, score);
+
+            // Modalı Aç
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            exitExam();
+            initMenu(); // Menüyü güncelle (yeni puan görünsün)
+        }
+
+        function exitExam() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-view').style.display = 'none';
+            document.getElementById('menu-view').style.display = 'flex';
+        }
+
+    </script>
 </body>
 </html>
